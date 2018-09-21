@@ -1,7 +1,6 @@
-console.log('what happened')
-
 import Vue from 'vue'
 import App from '@/app.vue'
+
 
 new Vue({
   el: "#app",
@@ -10,3 +9,4 @@ new Vue({
   },
   render: h => h(App)
 })
+
