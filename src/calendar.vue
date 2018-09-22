@@ -50,7 +50,9 @@ export default {
       this.text = calendar.dateFormate(new Date())
     },
     changeDate() {},
-    changeMonth() {}
+    changeMonth(e) {
+      console.log(e)
+    }
   }
 };
 </script>
