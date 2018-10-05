@@ -1,9 +1,9 @@
 <template>
     <section class="calendar-box">
       <div class="top-btn">
-        <div @click="changeDate">{{text}}</div>
-        <div @click="changeMonth">上个月</div>
-        <div @click="changeMonth">下个月</div>
+        <div >{{text}}</div>
+        <div @click="changeMonth(-1)">上个月</div>
+        <div @click="changeMonth(1)">下个月</div>
       </div>
 
 
@@ -17,26 +17,30 @@
           v-for="item of list" :key="item.id">{{item.num}}
         </span>
       </div>
+
     </section>
 </template>
 
 <script>
 import calendar from "./utils.js";
 
-let aaa = calendar.getList(new Date());
-console.log(aaa);
-
 export default {
   data: function() {
     return {
       list: [],
-      text: undefined,
+      currY: null, // 当前日历年份
+      currM: null // 当前日历月份
     };
   },
   props: {
     weekRange: {
       type: Array,
       default: () => ["一", "二", "三", "四", "五", "六", "日"]
+    }
+  },
+  computed: {
+    text: function() {
+      return `${this.currY}年${this.currM}月`;
     }
   },
 
@@ -47,11 +51,18 @@ export default {
   methods: {
     init() {
       this.list = calendar.getList(new Date());
-      this.text = calendar.dateFormate(new Date())
+      this.currY =  new Date().getFullYear()
+      this.currM = new Date().getMonth() + 1
     },
-    changeDate() {},
-    changeMonth(e) {
-      console.log(e)
+
+    changeMonth(flag) {
+      this.currM += flag;
+      if (this.currM > 12 || this.currM < 1) {
+        this.currY += flag;
+        this.currM > 12 ? (this.currM = 1) : (this.currM = 12);
+      }
+
+      this.list = calendar.getList(new Date(this.currY, this.currM - 1));
     }
   }
 };
@@ -68,18 +79,17 @@ $hover: #e0e0e0;
 $otherM: #757575;
 $otherM-hover: #f5f5f5;
 
-
 .calendar-box {
   width: 100%;
   max-width: 480px;
   margin: auto;
   border: 1px solid;
-  
+
   .top-btn {
     display: flex;
 
     div {
-      flex: 1
+      flex: 1;
     }
   }
 
@@ -89,7 +99,7 @@ $otherM-hover: #f5f5f5;
     text-align: center;
 
     span {
-      flex: 1
+      flex: 1;
     }
   }
 
@@ -101,21 +111,21 @@ $otherM-hover: #f5f5f5;
     text-align: center;
 
     span {
-      height:14%;
+      height: 14%;
       flex-basis: 14%;
       border-radius: 10% / 50%;
       cursor: pointer;
     }
 
-    span:hover{
+    span:hover {
       background-color: $hover;
     }
 
-     .today {
+    .today {
       background-color: $today !important;
     }
 
-    .otherMonth { 
+    .otherMonth {
       color: $otherM;
     }
 
@@ -124,9 +134,4 @@ $otherM-hover: #f5f5f5;
     }
   }
 }
-
-
-
-
-
 </style>
