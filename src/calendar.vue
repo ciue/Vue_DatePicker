@@ -13,11 +13,13 @@
 
       <div class="date-range">
         <span 
-          :class="[{today : item.isToday}, {otherMonth : !item.isCurrM}]" 
-          v-for="item of list" :key="item.id">{{item.num}}
+          :class="[{today : item.isToday}, {otherMonth : !item.isCurrM}, {selected: item.selected}]" 
+          @click="clickDay(item)"
+          v-for="item of list" :key="item.id">{{item.num,item.selected}}
         </span>
       </div>
 
+      <button @click="toToday">跳转到今天</button>
     </section>
 </template>
 
@@ -63,6 +65,17 @@ export default {
       }
 
       this.list = calendar.getList(new Date(this.currY, this.currM - 1));
+    },
+
+    clickDay(item) {
+      for (const i of this.list) {
+        i.selected = false
+      }
+      item.selected = true
+    },
+
+    toToday() {
+      this.list = calendar.getList(new Date());
     }
   }
 };
@@ -115,6 +128,10 @@ $otherM-hover: #f5f5f5;
       flex-basis: 14%;
       border-radius: 10% / 50%;
       cursor: pointer;
+    }
+
+    .selected {
+      background: $hover;
     }
 
     span:hover {

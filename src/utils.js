@@ -66,7 +66,8 @@ export default {
         num: i + 1,
         date: time,
         isToday: time === today,
-        isCurrM: true
+        isCurrM: true,
+        selected: false,
       })
     }
     return list
